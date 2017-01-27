@@ -42,6 +42,17 @@ private:
             std::shared_ptr<Particle> p1,
             std::shared_ptr<Particle> p2);
 
+    void SetDefaultParameters(std::shared_ptr<ParticleSystem> particle_system,
+                              std::shared_ptr<ControlBox> control_box);
+    void SetDefaultParticleMass(
+            std::shared_ptr<ParticleSystem> particle_system);
+    void SetDefaultDamping(
+            std::shared_ptr<ParticleSystem> particle_system);
+    void SetDefaultSpringCoefficient1(
+            std::shared_ptr<ParticleSystem> particle_system);
+    void SetDefaultSpringCoefficient2(
+            std::shared_ptr<ControlBox> control_box);
+
     bool CheckIndex(int i);
 };
 

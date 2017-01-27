@@ -17,6 +17,7 @@ void ParticleSystemFactory::Init(
     AddParticles(particle_system, particles);
     CreateMutualConstraints(particle_system, particles);
     AddControlBoxConstraints(particle_system, control_box, particles);
+    SetDefaultParameters(particle_system, control_box);
 }
 
 std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>
@@ -298,4 +299,49 @@ void ParticleSystemFactory::MaybeAddConstrain(
 
 bool ParticleSystemFactory::CheckIndex(int i){
     return i >= 0 && i < 4;
+}
+
+void ParticleSystemFactory::SetDefaultParameters(
+        std::shared_ptr<ParticleSystem> particle_system,
+        std::shared_ptr<ControlBox> control_box){
+    SetDefaultParticleMass(particle_system);
+    SetDefaultDamping(particle_system);
+    SetDefaultSpringCoefficient1(particle_system);
+    SetDefaultSpringCoefficient2(control_box);
+}
+
+void ParticleSystemFactory::SetDefaultParticleMass(
+        std::shared_ptr<ParticleSystem> particle_system){
+    auto mass = 0.1f;
+    auto& particles = particle_system->particles();
+    for(auto& particle : particles)
+        particle->mass(mass);
+}
+
+void ParticleSystemFactory::SetDefaultDamping(
+        std::shared_ptr<ParticleSystem> particle_system){
+    float k = 0.8f;
+    particle_system->damping(k);
+}
+
+void ParticleSystemFactory::SetDefaultSpringCoefficient1(
+        std::shared_ptr<ParticleSystem> particle_system){
+    float c1 = 42.0f;
+    auto& constraints = particle_system->constraints();
+    for(auto& constraint : constraints){
+        auto spring_constraint
+                = std::static_pointer_cast<SpringConstraint>(constraint);
+        spring_constraint->spring_coefficient(c1);
+    }
+}
+
+void ParticleSystemFactory::SetDefaultSpringCoefficient2(
+        std::shared_ptr<ControlBox> control_box){
+    float c2 = 20.0f;
+    auto& constraints = control_box->constraints();
+    for(auto& constraint : constraints){
+        auto spring_constraint
+                = std::static_pointer_cast<SpringConstraint>(constraint);
+        spring_constraint->spring_coefficient(c2);
+    }
 }

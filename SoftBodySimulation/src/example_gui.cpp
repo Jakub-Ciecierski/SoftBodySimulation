@@ -76,6 +76,7 @@ void ExampleGUI::RenderParameters(){
     RenderSpringCoefficient1();
     RenderSpringCoefficient2();
     RenderMass();
+    RenderGravity();
 }
 
 void ExampleGUI::RenderDampingParameter(){
@@ -128,4 +129,17 @@ void ExampleGUI::RenderMass(){
             particle->mass(mass);
         }
     }
+}
+
+void ExampleGUI::RenderGravity(){
+    static float raw[3];
+    const glm::vec3& g = simulation_->particle_system()->gravity_force();
+
+    raw[0] = g.x;
+    raw[1] = g.y;
+    raw[2] = g.z;
+
+    ImGui::SliderFloat3("Gravity", raw, -10, 10);
+    simulation_->particle_system()->gravity_force(
+            glm::vec3(raw[0], raw[1], raw[2]));
 }

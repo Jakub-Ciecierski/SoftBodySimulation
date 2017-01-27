@@ -27,7 +27,7 @@ SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
 SpringConstraint::~SpringConstraint(){}
 
 void SpringConstraint::ComputeForce(){
-    const float e = 0.0001f;
+    const float epsilon = 0.0001f;
     auto& position_a = particle_a_->position();
     auto& position_b = particle_b_->position();
     auto difference_ab = position_b - position_a;
@@ -35,23 +35,13 @@ void SpringConstraint::ComputeForce(){
     auto current_length = ifx::Magnitude(difference_ab);
     auto direction = glm::normalize(difference_ab);
 
-    if(current_length < e)
+    if(current_length < epsilon)
         direction = glm::vec3(0, 0, 0);
 
-    auto I = current_length - rest_length_;
-    auto force_magnitude = -spring_coefficient_ * I;
+    auto spring_length = current_length - rest_length_;
+    auto force_magnitude = -spring_coefficient_ * spring_length;
     auto force = direction * force_magnitude;
-/*
-    ifx::PrintVec3(position_a);
-    ifx::PrintVec3(position_b);
-    ifx::PrintVec3(difference_ab);
-    std::cout << "I: " << I << std::endl;
-    std::cout << "f: " << force_magnitude << std::endl;
-    std::cout << std::endl;
 
-    if(std::isnan(force.x))
-        std::cout << "why" << std::endl;
-*/
     particle_a_->ApplyForce(-force);
     particle_b_->ApplyForce(force);
 }

@@ -33,6 +33,7 @@ private:
     void RenderSpringCoefficient1();
     void RenderSpringCoefficient2();
     void RenderMass();
+    void RenderGravity();
 
     std::shared_ptr<ifx::EngineGUI> engine_gui_;
     std::shared_ptr<SoftBodySimulation> simulation_;

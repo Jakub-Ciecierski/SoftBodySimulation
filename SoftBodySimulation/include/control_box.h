@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <math/math_ifx.h>
 
 namespace ifx{
 class GameObject;
@@ -27,6 +28,11 @@ public:
     void AddConstraint(std::shared_ptr<Constraint> constraint);
 private:
     void InitParticles();
+
+    void UpdateParticlePosition();
+    void TransformParticle(std::shared_ptr<Particle> particle,
+                           glm::vec3 init_postion);
+    void UpdateParticleVelocity();
 
     std::vector<std::shared_ptr<Particle>> particles_;
     std::vector<std::shared_ptr<Constraint>> constraints_;

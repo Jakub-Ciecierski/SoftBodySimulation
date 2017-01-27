@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#include <math/math_ifx.h>
+
 namespace ifx{
 class SceneContainer;
 }
@@ -18,6 +20,10 @@ public:
     ~ParticleSystem();
 
     float* damping(){return &damping_;}
+    void damping(float v){damping_ = v;}
+
+    const glm::vec3& gravity_force(){return gravity_force_;}
+    void gravity_force(const glm::vec3& force){gravity_force_ = force;}
 
     std::vector<std::shared_ptr<Particle>>& particles(){return particles_;}
     std::vector<std::shared_ptr<Constraint>>& constraints(){
@@ -35,8 +41,9 @@ private:
     std::vector<std::shared_ptr<Constraint>> constraints_;
 
     float damping_;
-
     std::shared_ptr<ifx::SceneContainer> scene_;
+
+    glm::vec3 gravity_force_;
 };
 
 
