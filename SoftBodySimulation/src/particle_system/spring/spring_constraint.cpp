@@ -9,7 +9,8 @@
 SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
                                    std::shared_ptr<Particle> particle_b) :
         Constraint(particle_a, particle_b),
-        spring_coefficient_(0.2f){
+        spring_coefficient_(1.2f),
+        is_control_box_(false){
     rest_length_
             = ifx::EuclideanDistance(particle_a_->game_object()->getPosition(),
                                      particle_b_->game_object()->getPosition());
@@ -20,7 +21,8 @@ SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
                                    float rest_length) :
         Constraint(particle_a, particle_b),
         spring_coefficient_(0.2f),
-        rest_length_(rest_length){}
+        rest_length_(rest_length),
+        is_control_box_(false){}
 
 SpringConstraint::~SpringConstraint(){}
 
@@ -32,14 +34,14 @@ void SpringConstraint::ComputeForce(){
 
     auto current_length = ifx::Magnitude(difference_ab);
     auto direction = glm::normalize(difference_ab);
-    if(current_length < e){
-        direction = glm::vec3(0, 1, 0);
-    }
+
+    if(current_length < e)
+        direction = glm::vec3(0, 0, 0);
+
     auto I = current_length - rest_length_;
-    float force_magnitude = -spring_coefficient_ * I;
-
+    auto force_magnitude = -spring_coefficient_ * I;
     auto force = direction * force_magnitude;
-
+/*
     ifx::PrintVec3(position_a);
     ifx::PrintVec3(position_b);
     ifx::PrintVec3(difference_ab);
@@ -49,7 +51,7 @@ void SpringConstraint::ComputeForce(){
 
     if(std::isnan(force.x))
         std::cout << "why" << std::endl;
-
+*/
     particle_a_->ApplyForce(-force);
     particle_b_->ApplyForce(force);
 }

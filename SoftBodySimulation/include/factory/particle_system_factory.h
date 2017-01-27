@@ -19,7 +19,7 @@ public:
               std::shared_ptr<ControlBox> control_box);
 private:
     std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>
-            CreateParticles(std::shared_ptr<ParticleSystem> particle_system);
+            CreateParticles();
     void AddParticles(
             std::shared_ptr<ParticleSystem> particle_system,
             std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>

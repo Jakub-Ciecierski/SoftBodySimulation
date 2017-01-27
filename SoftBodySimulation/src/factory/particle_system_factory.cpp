@@ -13,16 +13,14 @@ ParticleSystemFactory::~ParticleSystemFactory(){}
 void ParticleSystemFactory::Init(
         std::shared_ptr<ParticleSystem> particle_system,
         std::shared_ptr<ControlBox> control_box){
-    auto particles = CreateParticles(particle_system);
+    auto particles = CreateParticles();
     AddParticles(particle_system, particles);
     CreateMutualConstraints(particle_system, particles);
-
     AddControlBoxConstraints(particle_system, control_box, particles);
 }
 
 std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>
-        ParticleSystemFactory::CreateParticles(
-        std::shared_ptr<ParticleSystem> particle_system){
+        ParticleSystemFactory::CreateParticles(){
     const int a = 4;
     const float box_length = 2;
 
@@ -169,7 +167,7 @@ void ParticleSystemFactory::CreateMutualConstraints(
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
                                       particles[i][back][down]);
-
+/*
                 // ...
                 if(CheckIndex(left) && CheckIndex(front) && CheckIndex(up))
                     MaybeAddConstrain(particle_system,
@@ -206,6 +204,8 @@ void ParticleSystemFactory::CreateMutualConstraints(
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
                                       particles[right][back][down]);
+*/
+
             }
         }
     }
@@ -221,22 +221,46 @@ void ParticleSystemFactory::AddControlBoxConstraints(
         particle_system->AddParticle(particle);
     }
     auto spring1 = CreateSpring(particles[0][0][0], control_particles[0], true);
+    spring1->is_control_box(true);
+
     auto spring2 = CreateSpring(particles[3][0][0], control_particles[1], true);
+    spring2->is_control_box(true);
     auto spring3 = CreateSpring(particles[0][0][3], control_particles[2], true);
+    spring3->is_control_box(true);
     auto spring4 = CreateSpring(particles[3][0][3], control_particles[3], true);
+    spring4->is_control_box(true);
     auto spring5 = CreateSpring(particles[0][3][0], control_particles[4], true);
+    spring5->is_control_box(true);
     auto spring6 = CreateSpring(particles[3][3][0], control_particles[5], true);
+    spring6->is_control_box(true);
     auto spring7 = CreateSpring(particles[0][3][3], control_particles[6], true);
+    spring7->is_control_box(true);
     auto spring8 = CreateSpring(particles[3][3][3], control_particles[7], true);
+    spring8->is_control_box(true);
 
     particle_system->AddConstraint(spring1);
+    control_box->AddConstraint(spring1);
+
     particle_system->AddConstraint(spring2);
+    control_box->AddConstraint(spring2);
+
     particle_system->AddConstraint(spring3);
+    control_box->AddConstraint(spring3);
+
     particle_system->AddConstraint(spring4);
+    control_box->AddConstraint(spring4);
+
     particle_system->AddConstraint(spring5);
+    control_box->AddConstraint(spring5);
+
     particle_system->AddConstraint(spring6);
+    control_box->AddConstraint(spring6);
+
     particle_system->AddConstraint(spring7);
+    control_box->AddConstraint(spring7);
+
     particle_system->AddConstraint(spring8);
+    control_box->AddConstraint(spring8);
 }
 
 std::shared_ptr<SpringConstraint> ParticleSystemFactory::CreateSpring(

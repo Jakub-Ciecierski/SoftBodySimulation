@@ -13,11 +13,17 @@ public:
     ~SpringConstraint();
 
     float* spring_coefficient(){return &spring_coefficient_;}
+    void spring_coefficient(float v){spring_coefficient_ = v;}
+
+    bool is_control_box(){return is_control_box_;}
+    void is_control_box(bool v){is_control_box_ = v;}
 
     virtual void ComputeForce() override;
 private:
     float rest_length_;
     float spring_coefficient_;
+
+    bool is_control_box_;
 
 };
 

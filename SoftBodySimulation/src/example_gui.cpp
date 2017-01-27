@@ -8,6 +8,11 @@
 #include <soft_body_simulation.h>
 #include <particle_system/particle_system_distorter.h>
 #include <particle_system/particle_system.h>
+#include <particle_system/particle.h>
+#include <particle_system/spring/spring_constraint.h>
+#include <control_box.h>
+
+#include <iostream>
 
 ExampleGUI::ExampleGUI(GLFWwindow* window,
                        std::shared_ptr<ifx::SceneContainer> scene,
@@ -35,6 +40,7 @@ void ExampleGUI::Render(){
 void ExampleGUI::RenderWindow(){
     RenderSimulationInfo();
     RenderVelocityDistortion();
+    RenderParameters();
 }
 
 void ExampleGUI::RenderSimulationInfo(){
@@ -63,5 +69,63 @@ void ExampleGUI::RenderVelocityDistortion(){
         ParticleSystemDistorter distorter;
         distorter.DistortParticlesVelocity(simulation_->particle_system());
     }
+}
 
+void ExampleGUI::RenderParameters(){
+    RenderDampingParameter();
+    RenderSpringCoefficient1();
+    RenderSpringCoefficient2();
+    RenderMass();
+}
+
+void ExampleGUI::RenderDampingParameter(){
+    ImGui::SliderFloat("Damping (k)", simulation_->particle_system()->damping(), 0.0, 100);
+}
+
+void ExampleGUI::RenderSpringCoefficient1(){
+    auto& constraints = simulation_->particle_system()->constraints();
+    static float c1 = 0.1;
+    if(constraints.size() > 0){
+        c1 = *(std::static_pointer_cast<SpringConstraint>(constraints[0])->spring_coefficient());
+    }
+
+    if(ImGui::SliderFloat("Spring Coefficient 1 (c1)", &c1, 0.1, 100)){
+        for(auto& constraint : constraints){
+            auto spring_constraint = std::static_pointer_cast<SpringConstraint>(constraint);
+            if(!spring_constraint->is_control_box()){
+                spring_constraint->spring_coefficient(c1);
+            }
+        }
+    }
+}
+
+void ExampleGUI::RenderSpringCoefficient2(){
+    auto& constraints = simulation_->control_box()->constraints();
+    static float c2 = 0.1;
+    if(constraints.size() > 0){
+        c2 = *(std::static_pointer_cast<SpringConstraint>(constraints[0])->spring_coefficient());
+    }
+
+    if(ImGui::SliderFloat("Spring Coefficient 2 (c2)", &c2, 0.1, 100)) {
+        for (auto &constraint : constraints) {
+            auto spring_constraint = std::static_pointer_cast<SpringConstraint>(constraint);
+            if (spring_constraint->is_control_box()) {
+                spring_constraint->spring_coefficient(c2);
+            }
+        }
+    }
+}
+
+void ExampleGUI::RenderMass(){
+    auto& particles = simulation_->particle_system()->particles();
+
+    static float mass = 1.0f;
+    if(particles.size() > 0)
+        mass = *particles[0]->mass();
+
+    if(ImGui::SliderFloat("Mass", &mass, 0.1, 100)) {
+        for (auto& particle : particles) {
+            particle->mass(mass);
+        }
+    }
 }

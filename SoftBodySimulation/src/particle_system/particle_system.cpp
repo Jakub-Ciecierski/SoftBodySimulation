@@ -37,13 +37,15 @@ void ParticleSystem::StepSimulation(float dt){
 void ParticleSystem::UpdateParticle(std::shared_ptr<Particle> particle,
                                     float dt){
     auto force = particle->force();
-    force = damping_ * force;
+
+    force += -(damping_ * particle->velocity());
 /*
     ifx::PrintVec3(force);
     ifx::PrintVec3(particle->velocity());
     ifx::PrintVec3(particle->position());
     std::cout << std::endl;
 */
+
     glm::vec3 acceleration = force / (*particle->mass());
     glm::vec3 velocity = particle->velocity() + dt * acceleration;
     glm::vec3 position = particle->position() + dt * velocity;

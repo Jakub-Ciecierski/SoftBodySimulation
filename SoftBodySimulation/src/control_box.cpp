@@ -81,3 +81,7 @@ void ControlBox::InitParticles(){
     particle8->position(glm::vec3(x + a_half, y+ a_half, z+ a_half));
     particles_.push_back(particle8);
 }
+
+void ControlBox::AddConstraint(std::shared_ptr<Constraint> constraint){
+    constraints_.push_back(constraint);
+}

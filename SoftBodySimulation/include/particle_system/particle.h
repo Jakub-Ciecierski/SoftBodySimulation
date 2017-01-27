@@ -16,6 +16,7 @@ public:
 
     const glm::vec3& force(){return force_;}
     float* mass(){return &mass_;}
+    void mass(float v){mass_ = v;}
 
     const glm::vec3& position();
     void position(const glm::vec3& pos);

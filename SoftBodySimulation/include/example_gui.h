@@ -28,6 +28,12 @@ private:
     void RenderSimulationInfo();
     void RenderVelocityDistortion();
 
+    void RenderParameters();
+    void RenderDampingParameter();
+    void RenderSpringCoefficient1();
+    void RenderSpringCoefficient2();
+    void RenderMass();
+
     std::shared_ptr<ifx::EngineGUI> engine_gui_;
     std::shared_ptr<SoftBodySimulation> simulation_;
 
