@@ -7,7 +7,7 @@
 #include <iostream>
 
 CollisionHandler::CollisionHandler(std::shared_ptr<Room> room) :
-    restitution_(1.0f),
+    restitution_(0.5f),
     room_(room){}
 
 CollisionHandler::~CollisionHandler(){}

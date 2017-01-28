@@ -26,6 +26,7 @@ std::shared_ptr<ControlBox> ControlBoxFactory::CreateControlBox(){
             glm::vec3(255,0,0), ifx::TextureTypes::SPECULAR);
 
     render_object->models()[0]->getMesh(0)->material(material);
+
     render_object->models()[0]->getMesh(0)->polygon_mode
             (ifx::PolygonMode::LINE);
 

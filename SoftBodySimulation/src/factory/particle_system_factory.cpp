@@ -14,6 +14,7 @@ void ParticleSystemFactory::Init(
         std::shared_ptr<ParticleSystem> particle_system,
         std::shared_ptr<ControlBox> control_box){
     auto particles = CreateParticles();
+    particle_system->particle_matrix(particles);
     AddParticles(particle_system, particles);
     CreateMutualConstraints(particle_system, particles);
     AddControlBoxConstraints(particle_system, control_box, particles);
@@ -52,8 +53,8 @@ void ParticleSystemFactory::AddParticles(
         std::shared_ptr<ParticleSystem> particle_system,
         std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>
         particles){
-
     const int a = 4;
+
     for(int i = 0; i < a; i++){
         for(int j = 0; j < a; j++){
             for(int k = 0; k < a; k++){
@@ -61,15 +62,6 @@ void ParticleSystemFactory::AddParticles(
             }
         }
     }
-/*
-    particle_system->AddParticle(particles[0][0][0]);
-    particle_system->AddParticle(particles[3][0][0]);
-    particle_system->AddParticle(particles[0][0][3]);
-    particle_system->AddParticle(particles[3][0][3]);
-    particle_system->AddParticle(particles[0][3][0]);
-    particle_system->AddParticle(particles[3][3][0]);
-    particle_system->AddParticle(particles[0][3][3]);
-    particle_system->AddParticle(particles[3][3][3]);*/
 }
 
 void ParticleSystemFactory::CreateMutualConstraints(
@@ -168,7 +160,7 @@ void ParticleSystemFactory::CreateMutualConstraints(
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
                                       particles[i][back][down]);
-/*
+
                 // ...
                 if(CheckIndex(left) && CheckIndex(front) && CheckIndex(up))
                     MaybeAddConstrain(particle_system,
@@ -205,7 +197,7 @@ void ParticleSystemFactory::CreateMutualConstraints(
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
                                       particles[right][back][down]);
-*/
+
 
             }
         }

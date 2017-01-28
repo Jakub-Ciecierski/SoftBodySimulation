@@ -30,6 +30,8 @@ private:
     void RenderSimulationInfo();
     void RenderVelocityDistortion();
 
+    void RenderSelectControlBox();
+
     void RenderParameters();
     void RenderDampingParameter();
     void RenderSpringCoefficient1();
@@ -39,8 +41,13 @@ private:
     void RenderRestitution();
 
     void RenderRenderOptions();
+    void RenderShowConstraints();
+    void RenderShowBezierCube();
+    void RenderShowParticles();
 
     void Reset();
+
+    void SelectControlBox();
 
     std::shared_ptr<ifx::EngineGUI> engine_gui_;
     std::shared_ptr<SoftBodySimulation> simulation_;

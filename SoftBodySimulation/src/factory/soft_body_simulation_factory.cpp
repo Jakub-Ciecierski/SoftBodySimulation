@@ -8,8 +8,7 @@ SoftBodySimulationFactory::SoftBodySimulationFactory(){}
 SoftBodySimulationFactory::~SoftBodySimulationFactory(){}
 
 std::shared_ptr<SoftBodySimulation> SoftBodySimulationFactory::Create(
-        std::shared_ptr<ifx::SceneContainer> scene
-){
+        std::shared_ptr<ifx::SceneContainer> scene){
     auto control_box = ControlBoxFactory().CreateControlBox();
     auto particle_system
             = std::shared_ptr<ParticleSystem>(new ParticleSystem(scene));

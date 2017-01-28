@@ -107,18 +107,14 @@ int main() {
     game->scene()->Add(game_object2);
     game->scene()->Add(game_object3);
 
-    auto simulation = CreateSoftBodySimulation(game->scene());
-
     auto gui = std::shared_ptr<ExampleGUI>(
             new ExampleGUI(
                     game->game_loop()->renderer()->window()->getHandle(),
                     game->scene(),
-                    simulation,
+                    nullptr,
                     game->game_loop()->physics_simulation(),
                     game->game_loop()));
     game->game_loop()->renderer()->SetGUI(gui);
-
-    game->game_loop()->AddSimulation(simulation);
 
     game->Start();
 }

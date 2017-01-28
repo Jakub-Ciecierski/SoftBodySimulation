@@ -2,6 +2,8 @@
 
 #include <engine_gui/factory/engine_gui_factory.h>
 #include <engine_gui/engine_gui.h>
+#include <engine_gui/views/scene_view.h>
+
 #include <gui/imgui/imgui.h>
 #include <physics/bullet_extensions/btFractureDynamicsWorld.h>
 #include <physics/simulations/bullet_physics_simulation.h>
@@ -17,6 +19,7 @@
 #include <factory/particle_system_factory.h>
 #include <factory/soft_body_simulation_factory.h>
 #include <collision/collision_handler.h>
+#include <bezier_cube.h>
 
 ExampleGUI::ExampleGUI(GLFWwindow* window,
                        std::shared_ptr<ifx::SceneContainer> scene,
@@ -30,6 +33,8 @@ ExampleGUI::ExampleGUI(GLFWwindow* window,
         game_loop_(game_loop){
     engine_gui_ = ifx::EngineGUIFactory().CreateEngineGUI(scene,
                                                           physics_simulation);
+    Reset();
+    SelectControlBox();
 }
 ExampleGUI::~ExampleGUI(){}
 
@@ -52,6 +57,7 @@ void ExampleGUI::RenderWindow(){
     }
 
     if(ImGui::TreeNode("Parameters")){
+        RenderSelectControlBox();
         RenderVelocityDistortion();
         RenderParameters();
         ImGui::TreePop();
@@ -89,6 +95,12 @@ void ExampleGUI::RenderVelocityDistortion(){
     if(ImGui::Button("Distort velocity")){
         ParticleSystemDistorter distorter;
         distorter.DistortParticlesVelocity(simulation_->particle_system());
+    }
+}
+
+void ExampleGUI::RenderSelectControlBox(){
+    if(ImGui::Button("Select Control Box")){
+        SelectControlBox();
     }
 }
 
@@ -173,6 +185,12 @@ void ExampleGUI::RenderRestitution(){
 }
 
 void ExampleGUI::RenderRenderOptions(){
+    RenderShowConstraints();
+    RenderShowBezierCube();
+    RenderShowParticles();
+}
+
+void ExampleGUI::RenderShowConstraints(){
     static bool v;
     v = simulation_->particle_system()->draw_constraints();
     if(ImGui::Checkbox("Show Constraints", &v)){
@@ -180,16 +198,43 @@ void ExampleGUI::RenderRenderOptions(){
     }
 }
 
-void ExampleGUI::Reset(){
-    auto simulation = SoftBodySimulationFactory().Create(scene_);
-    if(simulation->control_box()->game_object())
-        scene_->Remove(simulation->control_box()->game_object());
-    scene_->Add(simulation->control_box()->game_object());
+void ExampleGUI::RenderShowBezierCube(){
+    static bool v;
+    v = simulation_->bezier_cube()->show();
+    if(ImGui::Checkbox("Show Bezier Cube", &v)){
+        simulation_->bezier_cube()->show(v);
+    }
+}
 
+void ExampleGUI::RenderShowParticles(){
+    static bool v;
+    v = simulation_->particle_system()->draw_particles();
+    if(ImGui::Checkbox("Show Particles", &v)){
+        simulation_->particle_system()->draw_particles(v);
+    }
+}
+
+void ExampleGUI::Reset(){
+    if(simulation_ && simulation_->control_box()->game_object())
+        scene_->Remove(simulation_->control_box()->game_object());
+
+    auto simulation = SoftBodySimulationFactory().Create(scene_);
     ParticleSystemFactory().Init(simulation->particle_system(),
                                  simulation->control_box());
+    scene_->Add(simulation->control_box()->game_object());
+
     if(simulation_)
         game_loop_->RemoveSimulation(simulation_);
+
     simulation_ = simulation;
     game_loop_->AddSimulation(simulation);
+
+    SelectControlBox();
+}
+
+void ExampleGUI::SelectControlBox(){
+    if(simulation_->control_box()->game_object()){
+        engine_gui_->scene_view()->SetSelectedGameObject(
+                simulation_->control_box()->game_object());
+    }
 }

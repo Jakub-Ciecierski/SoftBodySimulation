@@ -7,6 +7,7 @@
 
 class ParticleSystem;
 class ControlBox;
+class BezierCube;
 
 class SoftBodySimulation : public ifx::Simulation {
 public:
@@ -17,11 +18,13 @@ public:
 
     std::shared_ptr<ParticleSystem> particle_system(){return particle_system_;}
     std::shared_ptr<ControlBox> control_box(){return control_box_;}
-
+    std::shared_ptr<BezierCube> bezier_cube(){return bezier_cube_;}
     virtual void Update() override;
 private:
     std::shared_ptr<ParticleSystem> particle_system_;
     std::shared_ptr<ControlBox> control_box_;
+    std::shared_ptr<BezierCube> bezier_cube_;
+
 };
 
 

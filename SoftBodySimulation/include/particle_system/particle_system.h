@@ -15,6 +15,9 @@ class Constraint;
 class CollisionDetector;
 class CollisionHandler;
 
+using ParticleMatrix =
+std::vector<std::vector<std::vector<std::shared_ptr<Particle>>>>;
+
 class ParticleSystem {
 public:
 
@@ -40,6 +43,14 @@ public:
             draw_constraints_ = v;
             UpdateConstraintGameObjects();
     }
+
+    bool draw_particles(){return draw_particles_;}
+    void draw_particles(bool v );
+
+    ParticleMatrix& particle_matrix(){return particle_matrix_;}
+    void particle_matrix(ParticleMatrix& m){particle_matrix_ = m;}
+
+    std::shared_ptr<ifx::SceneContainer> scene(){return scene_;}
 
     void AddParticle(std::shared_ptr<Particle> particle);
     void AddConstraint(std::shared_ptr<Constraint> constraint);
@@ -70,6 +81,8 @@ private:
     glm::vec3 gravity_force_;
 
     bool draw_constraints_;
+    bool draw_particles_;
+    ParticleMatrix particle_matrix_;
 };
 
 

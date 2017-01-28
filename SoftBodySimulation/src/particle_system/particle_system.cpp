@@ -11,12 +11,14 @@
 #include <collision/collision_state.h>
 #include <factory/collision_room_factory.h>
 #include <room.h>
+#include <object/render_object.h>
 
 ParticleSystem::ParticleSystem(std::shared_ptr<ifx::SceneContainer> scene) :
     scene_(scene),
     damping_(10.0f),
     gravity_force_(glm::vec3(0,0,0)),
-    draw_constraints_(false){
+    draw_constraints_(false),
+    draw_particles_(true){
     auto room = CollisionRoomFactory().Create();
     collision_detector_ = std::shared_ptr<CollisionDetector>(
             new CollisionDetector(room));
@@ -99,6 +101,7 @@ void ParticleSystem::UpdateParticlePosition(
 void ParticleSystem::HandleCollisions(std::shared_ptr<Particle> particle,
                                       float dt){
     auto collision_state = collision_detector_->ComputeCollisionState(particle);
+
     while(collision_state.FoundCollision()){
         collision_handler_->HandleCollision(particle, collision_state);
 
@@ -152,4 +155,15 @@ void ParticleSystem::RemoveRoomToScene(){
         scene_->Remove(collision_detector_->room()->front_wall);
     if(collision_detector_->room()->back_wall)
         scene_->Remove(collision_detector_->room()->back_wall);
+}
+
+void ParticleSystem::draw_particles(bool v){
+    draw_particles_ = v;
+
+    for(auto& particle : particles_){
+        auto render_objects = particle->game_object()->GetComponents();
+        auto render_obect = std::static_pointer_cast<ifx::RenderObject>(
+                render_objects[0]);
+        render_obect->do_render(draw_particles_);
+    }
 }
