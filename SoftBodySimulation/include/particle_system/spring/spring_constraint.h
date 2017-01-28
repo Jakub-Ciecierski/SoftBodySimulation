@@ -6,10 +6,12 @@
 class SpringConstraint : public Constraint{
 public:
     SpringConstraint(std::shared_ptr<Particle> particle_a,
-                     std::shared_ptr<Particle> particle_b);
+                     std::shared_ptr<Particle> particle_b,
+                     bool generate_render_object = false);
     SpringConstraint(std::shared_ptr<Particle> particle_a,
                      std::shared_ptr<Particle> particle_b,
-                     float rest_length);
+                     float rest_length,
+                     bool generate_render_object = false);
     ~SpringConstraint();
 
     float* spring_coefficient(){return &spring_coefficient_;}

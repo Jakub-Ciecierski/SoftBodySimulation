@@ -8,11 +8,14 @@
 
 #include <object/game_object.h>
 
-Particle::Particle() :
+Particle::Particle(bool detect_collision) :
         mass_(1.0f),
-        velocity_(glm::vec3(0,0,0)){
+        velocity_(glm::vec3(0,0,0)),
+        acceleration_(glm::vec3(0,0,0)),
+        detect_collision_(detect_collision){
     InitGameObject();
     ResetForce();
+    last_position_ = position();
 }
 Particle::~Particle(){}
 
@@ -20,6 +23,7 @@ const glm::vec3& Particle::position(){
     return game_object_->getPosition();
 }
 void Particle::position(const glm::vec3& pos){
+    last_position_ = position();
     game_object_->moveTo(pos);
 }
 

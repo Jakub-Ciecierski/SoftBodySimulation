@@ -90,27 +90,27 @@ void ParticleSystemFactory::CreateMutualConstraints(
                 if(CheckIndex(left))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[left][j][k]);
+                                      particles[left][j][k], true);
                 if(CheckIndex(right))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[right][j][k]);
+                                      particles[right][j][k], true);
                 if(CheckIndex(front))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[i][front][k]);
+                                      particles[i][front][k], true);
                 if(CheckIndex(back))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[i][back][k]);
+                                      particles[i][back][k], true);
                 if(CheckIndex(up))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[i][j][up]);
+                                      particles[i][j][up], true);
                 if(CheckIndex(down))
                     MaybeAddConstrain(particle_system,
                                       particles[i][j][k],
-                                      particles[i][j][down]);
+                                      particles[i][j][down], true);
 
                 // ...
                 if(CheckIndex(left) && CheckIndex(front))
@@ -267,14 +267,15 @@ void ParticleSystemFactory::AddControlBoxConstraints(
 std::shared_ptr<SpringConstraint> ParticleSystemFactory::CreateSpring(
         std::shared_ptr<Particle> p1,
         std::shared_ptr<Particle> p2,
-        bool rest_length){
+        bool rest_length,
+        bool draw){
     if(!rest_length){
         auto constraint = std::shared_ptr<SpringConstraint>(
-                new SpringConstraint(p1, p2));
+                new SpringConstraint(p1, p2, draw));
         return constraint;
     }else{
         auto constraint = std::shared_ptr<SpringConstraint>(
-                new SpringConstraint(p1, p2, 0));
+                new SpringConstraint(p1, p2, 0, draw));
         return constraint;
     }
 
@@ -283,7 +284,8 @@ std::shared_ptr<SpringConstraint> ParticleSystemFactory::CreateSpring(
 void ParticleSystemFactory::MaybeAddConstrain(
         std::shared_ptr<ParticleSystem> particle_system,
         std::shared_ptr<Particle> p1,
-        std::shared_ptr<Particle> p2){
+        std::shared_ptr<Particle> p2,
+        bool draw){
     auto& constraints = particle_system->constraints();
     for(auto& constraint : constraints){
         if((constraint->particle_a() == p1
@@ -294,7 +296,7 @@ void ParticleSystemFactory::MaybeAddConstrain(
         }
 
     }
-    particle_system->AddConstraint(CreateSpring(p1, p2));
+    particle_system->AddConstraint(CreateSpring(p1, p2, false, draw));
 }
 
 bool ParticleSystemFactory::CheckIndex(int i){

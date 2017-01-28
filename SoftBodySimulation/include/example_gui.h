@@ -11,6 +11,7 @@ namespace ifx{
 class EngineGUI;
 class SceneContainer;
 class PhysicsSimulation;
+class GameLoop;
 }
 
 class ExampleGUI : public ifx::GUI{
@@ -19,7 +20,8 @@ public:
     ExampleGUI(GLFWwindow* window,
                std::shared_ptr<ifx::SceneContainer> scene,
                std::shared_ptr<SoftBodySimulation> hodograph_simulation,
-               std::shared_ptr<ifx::PhysicsSimulation> physics_simulation);
+               std::shared_ptr<ifx::PhysicsSimulation> physics_simulation,
+               std::shared_ptr<ifx::GameLoop> game_loop);
     ~ExampleGUI();
 
     virtual void Render() override;
@@ -34,10 +36,16 @@ private:
     void RenderSpringCoefficient2();
     void RenderMass();
     void RenderGravity();
+    void RenderRestitution();
+
+    void RenderRenderOptions();
+
+    void Reset();
 
     std::shared_ptr<ifx::EngineGUI> engine_gui_;
     std::shared_ptr<SoftBodySimulation> simulation_;
-
+    std::shared_ptr<ifx::SceneContainer> scene_;
+    std::shared_ptr<ifx::GameLoop> game_loop_;
 };
 
 

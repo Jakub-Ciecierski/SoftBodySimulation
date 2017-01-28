@@ -7,8 +7,10 @@
 #include "object/game_object.h"
 
 SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
-                                   std::shared_ptr<Particle> particle_b) :
-        Constraint(particle_a, particle_b),
+                                   std::shared_ptr<Particle> particle_b,
+                                   bool generate_render_object) :
+        Constraint(particle_a, particle_b,
+                   generate_render_object),
         spring_coefficient_(1.2f),
         is_control_box_(false){
     rest_length_
@@ -18,8 +20,10 @@ SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
 
 SpringConstraint::SpringConstraint(std::shared_ptr<Particle> particle_a,
                                    std::shared_ptr<Particle> particle_b,
-                                   float rest_length) :
-        Constraint(particle_a, particle_b),
+                                   float rest_length,
+                                   bool generate_render_object) :
+        Constraint(particle_a, particle_b,
+                   generate_render_object),
         spring_coefficient_(0.2f),
         rest_length_(rest_length),
         is_control_box_(false){}

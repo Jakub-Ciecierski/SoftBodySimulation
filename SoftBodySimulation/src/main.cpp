@@ -97,7 +97,6 @@ int main() {
             = std::shared_ptr<ifx::GameFactory>(new ifx::GameFactory());
     auto game = game_factory->Create();
 
-    auto game_object1 = CreateGameObjectFloor();
     auto game_object2 = CreateGameObjectLight();
 
     auto game_object3 = std::shared_ptr<ifx::GameObject>(new ifx::GameObject());
@@ -105,7 +104,6 @@ int main() {
             ifx::SceneFactory().CreateCamera(game->game_loop()->renderer()->window()));
     game_object3->moveTo(glm::vec3(-7, 2, 0));
 
-    game->scene()->Add(game_object1);
     game->scene()->Add(game_object2);
     game->scene()->Add(game_object3);
 
@@ -116,7 +114,8 @@ int main() {
                     game->game_loop()->renderer()->window()->getHandle(),
                     game->scene(),
                     simulation,
-                    game->game_loop()->physics_simulation()));
+                    game->game_loop()->physics_simulation(),
+                    game->game_loop()));
     game->game_loop()->renderer()->SetGUI(gui);
 
     game->game_loop()->AddSimulation(simulation);

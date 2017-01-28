@@ -11,15 +11,23 @@
 #include <particle_system/particle.h>
 #include <particle_system/spring/spring_constraint.h>
 #include <control_box.h>
-
+#include <game/scene_container.h>
+#include <game/game_loop.h>
 #include <iostream>
+#include <factory/particle_system_factory.h>
+#include <factory/soft_body_simulation_factory.h>
+#include <collision/collision_handler.h>
 
 ExampleGUI::ExampleGUI(GLFWwindow* window,
                        std::shared_ptr<ifx::SceneContainer> scene,
                        std::shared_ptr<SoftBodySimulation> simulation,
-                       std::shared_ptr<ifx::PhysicsSimulation> physics_simulation) :
+                       std::shared_ptr<ifx::PhysicsSimulation>
+                       physics_simulation,
+                       std::shared_ptr<ifx::GameLoop> game_loop) :
         ifx::GUI(window),
-        simulation_(simulation){
+        simulation_(simulation),
+        scene_(scene),
+        game_loop_(game_loop){
     engine_gui_ = ifx::EngineGUIFactory().CreateEngineGUI(scene,
                                                           physics_simulation);
 }
@@ -38,9 +46,21 @@ void ExampleGUI::Render(){
 }
 
 void ExampleGUI::RenderWindow(){
-    RenderSimulationInfo();
-    RenderVelocityDistortion();
-    RenderParameters();
+    if(ImGui::TreeNode("Simualtion")){
+        RenderSimulationInfo();
+        ImGui::TreePop();
+    }
+
+    if(ImGui::TreeNode("Parameters")){
+        RenderVelocityDistortion();
+        RenderParameters();
+        ImGui::TreePop();
+    }
+
+    if(ImGui::TreeNode("Render")){
+        RenderRenderOptions();
+        ImGui::TreePop();
+    }
 }
 
 void ExampleGUI::RenderSimulationInfo(){
@@ -50,6 +70,7 @@ void ExampleGUI::RenderSimulationInfo(){
     if (ImGui::Button("Reset")) {
         simulation_->SetRunning(true);
         simulation_->Reset();
+        Reset();
     }
     ImGui::SameLine();
 
@@ -77,6 +98,7 @@ void ExampleGUI::RenderParameters(){
     RenderSpringCoefficient2();
     RenderMass();
     RenderGravity();
+    RenderRestitution();
 }
 
 void ExampleGUI::RenderDampingParameter(){
@@ -142,4 +164,32 @@ void ExampleGUI::RenderGravity(){
     ImGui::SliderFloat3("Gravity", raw, -10, 10);
     simulation_->particle_system()->gravity_force(
             glm::vec3(raw[0], raw[1], raw[2]));
+}
+
+void ExampleGUI::RenderRestitution(){
+    ImGui::SliderFloat("Restitution",
+                       simulation_->particle_system()->
+                               collision_handler()->restitution(), 0, 1);
+}
+
+void ExampleGUI::RenderRenderOptions(){
+    static bool v;
+    v = simulation_->particle_system()->draw_constraints();
+    if(ImGui::Checkbox("Show Constraints", &v)){
+        simulation_->particle_system()->draw_constraints(v);
+    }
+}
+
+void ExampleGUI::Reset(){
+    auto simulation = SoftBodySimulationFactory().Create(scene_);
+    if(simulation->control_box()->game_object())
+        scene_->Remove(simulation->control_box()->game_object());
+    scene_->Add(simulation->control_box()->game_object());
+
+    ParticleSystemFactory().Init(simulation->particle_system(),
+                                 simulation->control_box());
+    if(simulation_)
+        game_loop_->RemoveSimulation(simulation_);
+    simulation_ = simulation;
+    game_loop_->AddSimulation(simulation);
 }

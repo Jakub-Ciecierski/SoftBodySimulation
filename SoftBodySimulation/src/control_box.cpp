@@ -28,35 +28,35 @@ void ControlBox::InitParticles(){
     float z = position.z;
     auto a_half = a_ / 2.0f;
 
-    auto particle1 = std::shared_ptr<Particle>(new Particle());
+    auto particle1 = std::shared_ptr<Particle>(new Particle(false));
     particle1->position(glm::vec3(x - a_half,y- a_half,z- a_half));
     particles_.push_back(particle1);
 
-    auto particle2 = std::shared_ptr<Particle>(new Particle());
+    auto particle2 = std::shared_ptr<Particle>(new Particle(false));
     particle2->position(glm::vec3(x + a_half,y - a_half,z- a_half));
     particles_.push_back(particle2);
 
-    auto particle3 = std::shared_ptr<Particle>(new Particle());
+    auto particle3 = std::shared_ptr<Particle>(new Particle(false));
     particle3->position(glm::vec3(x - a_half, y- a_half, z + a_half));
     particles_.push_back(particle3);
 
-    auto particle4 = std::shared_ptr<Particle>(new Particle());
+    auto particle4 = std::shared_ptr<Particle>(new Particle(false));
     particle4->position(glm::vec3(x + a_half, y - a_half, z+ a_half));
     particles_.push_back(particle4);
 
-    auto particle5 = std::shared_ptr<Particle>(new Particle());
+    auto particle5 = std::shared_ptr<Particle>(new Particle(false));
     particle5->position(glm::vec3(x - a_half, y + a_half, z - a_half));
     particles_.push_back(particle5);
 
-    auto particle6 = std::shared_ptr<Particle>(new Particle());
+    auto particle6 = std::shared_ptr<Particle>(new Particle(false));
     particle6->position(glm::vec3(x + a_half, y + a_half, z - a_half));
     particles_.push_back(particle6);
 
-    auto particle7 = std::shared_ptr<Particle>(new Particle());
+    auto particle7 = std::shared_ptr<Particle>(new Particle(false));
     particle7->position(glm::vec3(x - a_half, y+ a_half, z + a_half));
     particles_.push_back(particle7);
 
-    auto particle8 = std::shared_ptr<Particle>(new Particle());
+    auto particle8 = std::shared_ptr<Particle>(new Particle(false));
     particle8->position(glm::vec3(x + a_half, y+ a_half, z+ a_half));
     particles_.push_back(particle8);
 }

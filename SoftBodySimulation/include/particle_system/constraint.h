@@ -12,7 +12,8 @@ class Particle;
 class Constraint {
 public:
     Constraint(std::shared_ptr<Particle> particle_a,
-               std::shared_ptr<Particle> particle_b);
+               std::shared_ptr<Particle> particle_b,
+               bool generate_render_object = false);
     virtual ~Constraint();
 
     std::shared_ptr<Particle> particle_a(){return particle_a_;}
@@ -28,6 +29,8 @@ protected:
     std::shared_ptr<Particle> particle_b_;
 
     std::shared_ptr<ifx::GameObject> game_object_;
+
+    bool generate_render_object_;
 
 };
 

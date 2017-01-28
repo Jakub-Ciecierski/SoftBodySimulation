@@ -35,12 +35,15 @@ private:
             particles);
     std::shared_ptr<SpringConstraint> CreateSpring(
             std::shared_ptr<Particle> p1,
-            std::shared_ptr<Particle> p2, bool rest_length = false);
+            std::shared_ptr<Particle> p2,
+            bool rest_length = false,
+            bool draw = false);
 
     void MaybeAddConstrain(
             std::shared_ptr<ParticleSystem> particle_system,
             std::shared_ptr<Particle> p1,
-            std::shared_ptr<Particle> p2);
+            std::shared_ptr<Particle> p2,
+            bool draw = false);
 
     void SetDefaultParameters(std::shared_ptr<ParticleSystem> particle_system,
                               std::shared_ptr<ControlBox> control_box);

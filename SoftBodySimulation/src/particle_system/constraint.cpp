@@ -5,15 +5,20 @@
 #include <object/game_object.h>
 
 Constraint::Constraint(std::shared_ptr<Particle> particle_a,
-                       std::shared_ptr<Particle> particle_b) :
+                       std::shared_ptr<Particle> particle_b,
+                       bool generate_render_object) :
         particle_a_(particle_a),
-        particle_b_(particle_b) {
+        particle_b_(particle_b),
+        game_object_(nullptr),
+        generate_render_object_(generate_render_object){
     UpdateGameObject();
 }
 
 Constraint::~Constraint(){}
 
 void Constraint::UpdateGameObject(){
+    if(!generate_render_object_)
+        return;
     game_object_ = std::shared_ptr<ifx::GameObject>(new ifx::GameObject());
 
     auto render_object = ifx::RenderObjectFactory().CreateLine(
